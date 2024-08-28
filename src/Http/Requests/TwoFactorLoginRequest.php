@@ -68,19 +68,27 @@ class TwoFactorLoginRequest extends FormRequest
      *
      * @return string|null
      */
-    public function validRecoveryCode()
+    public function validRecoveryCode(): bool
     {
         if (! $this->recovery_code) {
-            return;
+            return false;
         }
 
-        return tap(collect($this->challengedUser()->recoveryCodes())->first(function ($code) {
-            return hash_equals($code, $this->recovery_code) ? $code : null;
-        }), function ($code) {
-            if ($code) {
-                $this->session()->forget('login.id');
-            }
+        $item = collect($this->challengedUser()->recoveryCodes())->first(function ($item) {
+            return hash_equals($item->code, $this->recovery_code);
         });
+
+        if (! $item) {
+            return false;
+        }
+
+        if ($item && $item->used) {
+            $this->merge(['is_used' => true]);
+            return false;
+        }
+
+        $this->session()->forget('login.id');
+        return true;
     }
 
     /**

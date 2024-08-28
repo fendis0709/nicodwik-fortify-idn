@@ -135,7 +135,23 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
-            ]));
+            ]))->name('two-factor.challenge');
+
+        Route::get('/two-factor/register', [TwoFactorAuthenticatedSessionController::class, 'register'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('two-factor.register');
+    
+        Route::get('/two-factor/verify', [TwoFactorAuthenticatedSessionController::class, 'verify'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('two-factor.verify');
+    
+        Route::post('/two-factor/proceed', [TwoFactorAuthenticatedSessionController::class, 'proceed'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('two-factor.proceed');
+    
+        Route::post('/two-factor/resend-email', [TwoFactorAuthenticatedSessionController::class, 'resendEmail'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('two-factor.resend-email');
 
         $twoFactorMiddleware = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword')
             ? [config('fortify.auth_middleware', 'auth').':'.config('fortify.guard'), 'password.confirm']
@@ -167,5 +183,29 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 
         Route::post(RoutePath::for('two-factor.recovery-codes', '/user/two-factor-recovery-codes'), [RecoveryCodeController::class, 'store'])
             ->middleware($twoFactorMiddleware);
+
+        // Route::get('/two-factor-challenge', [TwoFactorAuthenticationController::class, 'challenge'])
+        //     ->middleware(['guest:'.config('fortify.guard')])
+        //     ->name('two-factor.login');
+    
+        // Route::post('/two-factor-recovery-code', [TwoFactorAuthenticationController::class, 'recoveryCode'])
+        //     ->middleware(['guest:'.config('fortify.guard')])
+        //     ->name('two-factor.recovery-code');
+    
+        // Route::get('/two-factor/register', [TwoFactorAuthenticationController::class, 'register'])
+        //     ->middleware($twoFactorMiddleware)
+        //     ->name('two-factor.register');
+    
+        // Route::get('/two-factor/verify', [TwoFactorAuthenticationController::class, 'verify'])
+        //     ->middleware($twoFactorMiddleware)
+        //     ->name('two-factor.verify');
+    
+        // Route::post('/two-factor/proceed', [TwoFactorAuthenticationController::class, 'proceed'])
+        //     ->middleware($twoFactorMiddleware)
+        //     ->name('two-factor.proceed');
+    
+        // Route::post('/two-factor/resend-email', [TwoFactorAuthenticationController::class, 'resendEmail'])
+        //     ->middleware($twoFactorMiddleware)
+        //     ->name('two-factor.resend-email');
     }
 });

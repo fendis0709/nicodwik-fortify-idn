@@ -1,16 +1,16 @@
 {
-    "name": "laravel/fortify",
-    "description": "Backend controllers and scaffolding for Laravel authentication.",
+    "name": "nicodwik/fortify",
+    "description": "Backend controllers and scaffolding for Laravel authentication (modified for iDN).",
     "keywords": ["laravel", "auth"],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel/fortify/issues",
-        "source": "https://github.com/laravel/fortify"
+        "issues": "https://github.com/nicodwik/fortify-idn/issues",
+        "source": "https://github.com/nicodwik/fortify-idn"
     },
     "authors": [
         {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
+            "name": "Nico Dwi Kuswanto",
+            "email": "nicodwika@gmail.com"
         }
     ],
     "require": {

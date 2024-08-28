@@ -21,6 +21,10 @@ return new class extends Migration
                 ->after('two_factor_secret')
                 ->nullable();
 
+            $table->text('two_factor_challenge_type')
+                ->after('two_factor_recovery_codes')
+                ->nullable();
+
             if (Fortify::confirmsTwoFactorAuthentication()) {
                 $table->timestamp('two_factor_confirmed_at')
                     ->after('two_factor_recovery_codes')
@@ -38,6 +42,7 @@ return new class extends Migration
             $table->dropColumn(array_merge([
                 'two_factor_secret',
                 'two_factor_recovery_codes',
+                'two_factor_challenge_type',
             ], Fortify::confirmsTwoFactorAuthentication() ? [
                 'two_factor_confirmed_at',
             ] : []));

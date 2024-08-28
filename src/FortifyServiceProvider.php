@@ -137,6 +137,17 @@ class FortifyServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs/UpdateUserPassword.php' => app_path('Actions/Fortify/UpdateUserPassword.php'),
             ], 'fortify-support');
 
+            $this->publishes([
+                __DIR__.'/../stubs/TwoFactorAuthenticationQRCode.php' => app_path('Mail/TwoFactorAuthenticationQRCode.php'),
+                __DIR__.'/../stubs/twofactor-qrcode.blade.php' => resource_path('email/twofactor-qrcode.blade.php'),
+            ], 'fortify-mail');
+
+            $this->publishes([
+                __DIR__.'/../stubs/two-factor/register.blade.php' => resource_path('views/auth/two-factor/register.blade.php'),
+                __DIR__.'/../stubs/two-factor/challenge.blade.php' => resource_path('views/auth/two-factor/challenge.blade.php'),
+                __DIR__.'/../stubs/two-factor/recovery-code.blade.php' => resource_path('views/auth/two-factor/recovery-code.blade.php'),
+            ], 'fortify-view');
+
             $method = method_exists($this, 'publishesMigrations') ? 'publishesMigrations' : 'publishes';
 
             $this->{$method}([

@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Events\TwoFactorAuthenticationChallenged;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\LoginRateLimiter;
+use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class RedirectIfTwoFactorAuthenticatable
@@ -27,16 +28,24 @@ class RedirectIfTwoFactorAuthenticatable
     protected $limiter;
 
     /**
+     * The enable two factor action.
+     *
+     * @var Laravel\Fortify\Actions\EnableTwoFactorAuthentication
+     */
+    protected $enable;
+
+    /**
      * Create a new controller instance.
      *
      * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
      * @param  \Laravel\Fortify\LoginRateLimiter  $limiter
      * @return void
      */
-    public function __construct(StatefulGuard $guard, LoginRateLimiter $limiter)
+    public function __construct(StatefulGuard $guard, LoginRateLimiter $limiter, EnableTwoFactorAuthentication $enable)
     {
         $this->guard = $guard;
         $this->limiter = $limiter;
+        $this->enable = $enable;
     }
 
     /**
@@ -50,22 +59,11 @@ class RedirectIfTwoFactorAuthenticatable
     {
         $user = $this->validateCredentials($request);
 
-        if (Fortify::confirmsTwoFactorAuthentication()) {
-            if (optional($user)->two_factor_secret &&
-                ! is_null(optional($user)->two_factor_confirmed_at) &&
-                in_array(TwoFactorAuthenticatable::class, class_uses_recursive($user))) {
-                return $this->twoFactorChallengeResponse($request, $user);
-            } else {
-                return $next($request);
-            }
-        }
+        // AUTO ENABLE TWOFACTOR
+        $enableTwoFactor = $this->enable;
+        $enableTwoFactor($user);
 
-        if (optional($user)->two_factor_secret &&
-            in_array(TwoFactorAuthenticatable::class, class_uses_recursive($user))) {
-            return $this->twoFactorChallengeResponse($request, $user);
-        }
-
-        return $next($request);
+        return $this->twoFactorChallengeResponse($request, $user);
     }
 
     /**
@@ -147,7 +145,10 @@ class RedirectIfTwoFactorAuthenticatable
             'login.remember' => $request->boolean('remember'),
         ]);
 
-        TwoFactorAuthenticationChallenged::dispatch($user);
+        if ($user->twoFactorActive()) {
+            return redirect()
+                ->route('two-factor.login', ['type' => $user->two_factor_challenge_type ?? 'code']);
+        }
 
         return $request->wantsJson()
                     ? response()->json(['two_factor' => true])

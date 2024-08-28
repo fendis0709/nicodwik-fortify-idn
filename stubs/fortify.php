@@ -151,9 +151,41 @@ return [
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false,
             // 'window' => 0,
         ]),
+    ],
+
+    'views-paths' => [
+        'two-factor' => [
+            'register' => 'auth.two-factor.register',
+            'challenge' => 'auth.two-factor.challenge',
+            'recovery-code' => 'auth.two-factor.recovery-code',
+        ],
+    ],
+    'messages' => [
+        'error' => [
+            'two-factor' => [
+                'register' => '2FA belum terdaftar, silahkan buka email dan ulangi langkah-langkah di atas',
+                'challenge' => '2FA Code yang kamu masukkan salah, silahkan periksa kembali google authenticator kamu',
+                'recovery-code' => 'Recovery code tidak sesuai, mohon diperiksa kembali',
+                'recovery-code_used' => 'Recovery code sudah pernah digunakan, silahkan hubungi tim support untuk lebih lanjutnya',
+                'resend-email' => 'Too many attempt, You may try again later',
+            ],
+        ],
+        'success' => [
+            'two-factor' => [
+                'register' => 'Pendaftaran berhasil',
+                'challenge' => null,
+                'recovery-code' => null,
+                'resend-email' => 'Email berhasil dikirim',
+            ],
+        ],
+    ],
+    'mail' => [
+        'two-factor' => [
+            'qr-code' => App\Mail\TwoFactorAuthenticationQRCode::class,
+        ]
     ],
 
 ];

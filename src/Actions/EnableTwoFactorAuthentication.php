@@ -39,10 +39,15 @@ class EnableTwoFactorAuthentication
         if (empty($user->two_factor_secret) || $force === true) {
             $user->forceFill([
                 'two_factor_secret' => encrypt($this->provider->generateSecretKey()),
-                'two_factor_recovery_codes' => encrypt(json_encode(Collection::times(8, function () {
-                    return RecoveryCode::generate();
+                'two_factor_recovery_codes' => encrypt(json_encode(Collection::times(3, function () {
+                    return [
+                        'code' => RecoveryCode::generate(),
+                        'used' => false,
+                    ];
                 })->all())),
             ])->save();
+
+            $user->sendEmailQRCode();
 
             TwoFactorAuthenticationEnabled::dispatch($user);
         }

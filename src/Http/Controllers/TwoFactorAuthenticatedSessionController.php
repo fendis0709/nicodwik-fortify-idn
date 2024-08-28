@@ -5,6 +5,7 @@ namespace Laravel\Fortify\Http\Controllers;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Contracts\FailedTwoFactorLoginResponse;
 use Laravel\Fortify\Contracts\TwoFactorChallengeViewResponse;
 use Laravel\Fortify\Contracts\TwoFactorLoginResponse;
@@ -56,12 +57,15 @@ class TwoFactorAuthenticatedSessionController extends Controller
      */
     public function store(TwoFactorLoginRequest $request)
     {
+        $recoveryCode = $request->input('recovery_code');
         $user = $request->challengedUser();
 
-        if ($code = $request->validRecoveryCode()) {
-            $user->replaceRecoveryCode($code);
+        if ($request->validRecoveryCode()) {
+            
+            $user->replaceRecoveryCode($recoveryCode);
+            $user->sendEmailQRCode();
 
-            event(new RecoveryCodeReplaced($user, $code));
+            event(new RecoveryCodeReplaced($user, $recoveryCode));
         } elseif (! $request->hasValidCode()) {
             event(new TwoFactorAuthenticationFailed($user));
 
@@ -75,5 +79,89 @@ class TwoFactorAuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         return app(TwoFactorLoginResponse::class);
+    }
+
+    public function register()
+    {
+        return view(config('fortify.views-path.two-factor.register'));
+    }
+
+    public function challenge(TwoFactorLoginRequest $request)
+    {
+        $challengeType = $request->query('type', 'code');
+        $user = $request->challengedUser();
+
+        if (empty($user->two_factor_challenge_type)) {
+            return redirect()
+                ->route('two-factor.register')
+                ->withErrors(config('fortify.messages.error.two-factor.register'));
+        }
+
+        if ($user->two_factor_challenge_type != $challengeType) {
+            $user->fill([
+                'two_factor_challenge_type' => $challengeType,
+            ])->save();
+        }
+
+        if ($user->two_factor_challenge_type == $user::RECOVERYCODECHALLENGE) {
+            return view(config('fortify.views-path.two-factor.recovery-code'));
+        }
+
+        return view(config('fortify.views-path.two-factor.challenge'));
+    }
+
+    public function verify(TwoFactorLoginRequest $request)
+    {
+        $user = $request->challengedUser();
+        if ($user->twoFactorInactive()) {
+            $user->fill([
+                'two_factor_confirmed_at' => now(),
+                'two_factor_challenge_type' => 'code',
+            ])->save();
+        }
+
+        return redirect()
+            ->route('two-factor.register')
+            ->withSuccess(config('fortify.messages.success.two-factor.register'));
+    }
+
+    public function proceed(TwoFactorLoginRequest $request)
+    {
+        $user = $request->challengedUser();
+        if ($user->twoFactorInactive()) {
+            return redirect()
+                ->route('two-factor.register')
+                ->withErrors(config('fortify.messages.error.two-factor.register'));
+        }
+
+        return redirect()
+            ->route('two-factor.login');
+    }
+
+    public function resendEmail(TwoFactorLoginRequest $request)
+    {
+        $user = $request->challengedUser();
+
+        $isEmailSent = RateLimiter::attempt(
+            'resend-email-two-factor:'.$user->getKeyName(),
+            6,
+            function () use ($user) {
+                $user->sendEmailQRCode(true);
+            },
+        );
+
+        if (! $isEmailSent) {
+            $seconds = RateLimiter::availableIn('resend-email-two-factor:'.$user->getKeyName());
+
+            return redirect()
+                ->back()
+                ->with('resendEmailTimer', $seconds)
+                ->withErrors(config('fortify.messages.error.two-factor.resend-email'));
+        }
+
+        return redirect()
+            ->back()
+            ->with('resendEmailTimer', 10)
+            ->withSuccess(config('fortify.messages.success.two-factor.resend-email'));
     }
 }

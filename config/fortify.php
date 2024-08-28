@@ -50,6 +50,37 @@ return [
             'recovery-codes' => null,
         ],
     ],
+    'views-paths' => [
+        'two-factor' => [
+            'register' => null,
+            'challenge' => null,
+            'recovery_code' => null,
+        ],
+    ],
+    'messages' => [
+        'error' => [
+            'two-factor' => [
+                'register' => null,
+                'challenge' => null,
+                'recovery_code' => null,
+                'recovery_code_used' => null,
+                'resend-email' => null,
+            ],
+        ],
+        'success' => [
+            'two-factor' => [
+                'register' => null,
+                'challenge' => null,
+                'recovery_code' => null,
+                'resend-email' => null,
+            ],
+        ],
+    ],
+    'mail' => [
+        'two-factor' => [
+            'qr-code' => null,
+        ]
+    ],
     'redirects' => [
         'login' => null,
         'logout' => null,

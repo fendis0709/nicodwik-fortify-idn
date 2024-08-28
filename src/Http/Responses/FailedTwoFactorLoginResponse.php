@@ -16,8 +16,12 @@ class FailedTwoFactorLoginResponse implements FailedTwoFactorLoginResponseContra
     public function toResponse($request)
     {
         [$key, $message] = $request->filled('recovery_code')
-            ? ['recovery_code', __('The provided two factor recovery code was invalid.')]
-            : ['code', __('The provided two factor authentication code was invalid.')];
+            ? (
+                $request->filled('is_used')
+                ? ['recovery_code', config('fortify.messages.error.two-factor.recovery-code_used')]
+                : ['recovery_code', config('fortify.messages.error.two-factor.recovery-code')]
+            )
+            : ['code', config('fortify.messages.error.two-factor.challenge')];
 
         if ($request->wantsJson()) {
             throw ValidationException::withMessages([
