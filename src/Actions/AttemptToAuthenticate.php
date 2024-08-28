@@ -54,6 +54,10 @@ class AttemptToAuthenticate
             $request->only(Fortify::username(), 'password'),
             $request->boolean('remember'))
         ) {
+            $request->session()->put([
+                'last_login' => now()->toDateString(),
+            ]);
+            
             return $next($request);
         }
 
