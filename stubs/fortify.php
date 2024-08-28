@@ -144,11 +144,12 @@ return [
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
+        // Features::registration(),
+        // Features::resetPasswords(),
         // Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
+        // Features::updateProfileInformation(),
+        // Features::updatePasswords(),
+
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => false,
@@ -156,13 +157,37 @@ return [
         ]),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Views Paths
+    |--------------------------------------------------------------------------
+    |
+    | 
+    | 
+    | 
+    |
+    */
+
     'views-paths' => [
+        'login' => 'fortune.auth.login',
         'two-factor' => [
             'register' => 'auth.two-factor.register',
             'challenge' => 'auth.two-factor.challenge',
             'recovery-code' => 'auth.two-factor.recovery-code',
         ],
     ],
+
+     /*
+    |--------------------------------------------------------------------------
+    | Messages
+    |--------------------------------------------------------------------------
+    |
+    | 
+    | 
+    | 
+    |
+    */
+
     'messages' => [
         'error' => [
             'two-factor' => [
@@ -182,10 +207,65 @@ return [
             ],
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validation
+    |--------------------------------------------------------------------------
+    |
+    | 
+    | 
+    | 
+    |
+    */
+
+    'validation' => [
+        'login' => [
+            'rules' => [
+                'email' => 'required|string|email|exists:users,email',
+                'password' => 'required|string|min:8',
+                'g-recaptcha-response' => 'required|captcha',
+            ], 
+            'messages' => [
+                'email.required' => 'Email Address is required',
+                'email.email' => 'Not a valid email address',
+                'email.exists' => 'Not a valid email address',
+                'password.required' => 'Password is required',
+                'password.min' => 'Please input minimum :min characters',
+            ],
+            'failed' => [
+                'password' => "That password doesn't match. Try again?",
+            ],
+        ],
+    ],
+
+     /*
+    |--------------------------------------------------------------------------
+    | Mail
+    |--------------------------------------------------------------------------
+    |
+    | 
+    | 
+    | 
+    |
+    */
+
     'mail' => [
         'two-factor' => [
             'qr-code' => App\Mail\TwoFactorAuthenticationQRCode::class,
         ]
     ],
 
+     /*
+    |--------------------------------------------------------------------------
+    | Two Factor Enabled
+    |--------------------------------------------------------------------------
+    |
+    | 
+    | 
+    | 
+    |
+    */
+    
+    'two_factor_enabled' => env('TWO_FACTOR_ENABLED', true),
 ];

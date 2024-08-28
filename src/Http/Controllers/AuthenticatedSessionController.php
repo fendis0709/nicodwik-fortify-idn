@@ -3,6 +3,7 @@
 namespace Laravel\Fortify\Http\Controllers;
 
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Pipeline;
@@ -42,11 +43,12 @@ class AuthenticatedSessionController extends Controller
      * Show the login view.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Laravel\Fortify\Contracts\LoginViewResponse
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create(Request $request): LoginViewResponse
+    public function create(Request $request): View
     {
-        return app(LoginViewResponse::class);
+        // return app(LoginViewResponse::class);
+        return view(config('fortify.views-paths.login'));
     }
 
     /**
@@ -85,7 +87,7 @@ class AuthenticatedSessionController extends Controller
         return (new Pipeline(app()))->send($request)->through(array_filter([
             config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
             config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
-            Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+            config('fortify.two_factor_enabled') ? RedirectIfTwoFactorAuthenticatable::class : null,
             AttemptToAuthenticate::class,
             PrepareAuthenticatedSession::class,
         ]));

@@ -24,9 +24,19 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return config('fortify.validation.login.rules') ?? [
             Fortify::username() => 'required|string',
             'password' => 'required|string',
         ];
+    }
+
+     /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return config('fortify.validation.login.messages') ?? [];
     }
 }
