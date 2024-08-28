@@ -9,7 +9,7 @@
     <div class="m-auto lg:w-1/4 md:w-1/2 sm:w-1/2">
         <form
             method="POST"
-            action="{{ route('two-factor.recovery-code') }}"
+            action="{{ route('two-factor.login') }}"
             class="mx-auto"
             x-data="{
                 disableSubmit: true,

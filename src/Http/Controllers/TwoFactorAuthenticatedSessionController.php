@@ -81,8 +81,12 @@ class TwoFactorAuthenticatedSessionController extends Controller
         return app(TwoFactorLoginResponse::class);
     }
 
-    public function register()
+    public function register(TwoFactorLoginRequest $request)
     {
+        if (! $request->hasChallengedUser()) {
+            throw new HttpResponseException(redirect()->route('login'));
+        }
+
         return view(config('fortify.view-paths.two-factor.register'));
     }
 
