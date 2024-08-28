@@ -1,6 +1,6 @@
 {
     "name": "nicodwik/fortify",
-    "description": "Backend controllers and scaffolding for Laravel authentication (modified for iDN).",
+    "description": "Backend controllers and scaffolding for Laravel authentication (modified for IDN).",
     "keywords": ["laravel", "auth"],
     "license": "MIT",
     "support": {
