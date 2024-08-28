@@ -102,7 +102,7 @@ class TwoFactorAuthenticatedSessionController extends Controller
         }
 
         if ($user->two_factor_challenge_type != $challengeType) {
-            $user->fill([
+            $user->forceFill([
                 'two_factor_challenge_type' => $challengeType,
             ])->save();
         }
@@ -118,7 +118,7 @@ class TwoFactorAuthenticatedSessionController extends Controller
     {
         $user = $request->challengedUser();
         if ($user->twoFactorInactive()) {
-            $user->fill([
+            $user->forceFill([
                 'two_factor_confirmed_at' => now(),
                 'two_factor_challenge_type' => 'code',
             ])->save();

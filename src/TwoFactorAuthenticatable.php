@@ -130,7 +130,7 @@ trait TwoFactorAuthenticatable
             $recoveryCodes = $recoveryCodes->where('used', false)->values();
         }
 
-        $this->fill([
+        $this->forceFill([
             'two_factor_challenge_type' => 'code',
             'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes->push([
                 'code' => RecoveryCode::generate(),
