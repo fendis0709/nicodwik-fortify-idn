@@ -83,7 +83,7 @@ class TwoFactorAuthenticatedSessionController extends Controller
 
     public function register()
     {
-        return view(config('fortify.views-path.two-factor.register'));
+        return view(config('fortify.view-paths.two-factor.register'));
     }
 
     public function challenge(TwoFactorLoginRequest $request)
@@ -108,10 +108,10 @@ class TwoFactorAuthenticatedSessionController extends Controller
         }
 
         if ($user->two_factor_challenge_type == $user::RECOVERYCODECHALLENGE) {
-            return view(config('fortify.views-path.two-factor.recovery-code'));
+            return view(config('fortify.view-paths.two-factor.recovery-code'));
         }
 
-        return view(config('fortify.views-path.two-factor.challenge'));
+        return view(config('fortify.view-paths.two-factor.challenge'));
     }
 
     public function verify(TwoFactorLoginRequest $request)

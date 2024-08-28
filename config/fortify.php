@@ -50,7 +50,7 @@ return [
             'recovery-codes' => null,
         ],
     ],
-    'views-paths' => [
+    'view-paths' => [
         'two-factor' => [
             'register' => null,
             'challenge' => null,

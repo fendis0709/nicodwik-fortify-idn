@@ -168,7 +168,7 @@ return [
     |
     */
 
-    'views-paths' => [
+    'view-paths' => [
         'login' => 'fortune.auth.login',
         'two-factor' => [
             'register' => 'auth.two-factor.register',

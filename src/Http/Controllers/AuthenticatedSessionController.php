@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request): View
     {
         // return app(LoginViewResponse::class);
-        return view(config('fortify.views-paths.login'));
+        return view(config('fortify.view-paths.login'));
     }
 
     /**
