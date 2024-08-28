@@ -139,7 +139,7 @@ class FortifyServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../stubs/TwoFactorAuthenticationQRCode.php' => app_path('Mail/TwoFactorAuthenticationQRCode.php'),
-                __DIR__.'/../stubs/twofactor-qrcode.blade.php' => resource_path('email/twofactor-qrcode.blade.php'),
+                __DIR__.'/../stubs/twofactor-qrcode.blade.php' => resource_path('views/email/twofactor-qrcode.blade.php'),
             ], 'fortify-mail');
 
             $this->publishes([

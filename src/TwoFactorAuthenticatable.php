@@ -52,6 +52,10 @@ trait TwoFactorAuthenticatable
 
         $binaryFile = $writer->writeString($this->twoFactorQrCodeUrl());
 
+        if (Storage::disk($fileSystem)->exists($targetFolder)) {
+            return;
+        }
+
         try {
             Storage::disk($fileSystem)
                 ->put($targetFolder, $binaryFile);
