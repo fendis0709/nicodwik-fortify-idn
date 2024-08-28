@@ -146,12 +146,9 @@ class RedirectIfTwoFactorAuthenticatable
         ]);
 
         if ($user->twoFactorActive()) {
-            return redirect()
-                ->route('two-factor.login', ['type' => $user->two_factor_challenge_type ?? 'code']);
+            return redirect()->route('two-factor.login', ['type' => $user->two_factor_challenge_type ?? 'code']);
         }
 
-        return $request->wantsJson()
-                    ? response()->json(['two_factor' => true])
-                    : redirect()->route('two-factor.login');
+        return redirect()->route('two-factor.register');
     }
 }

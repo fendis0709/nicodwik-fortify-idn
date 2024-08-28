@@ -88,6 +88,10 @@ class TwoFactorAuthenticatedSessionController extends Controller
 
     public function challenge(TwoFactorLoginRequest $request)
     {
+        if (! $request->hasChallengedUser()) {
+            throw new HttpResponseException(redirect()->route('login'));
+        }
+
         $challengeType = $request->query('type', 'code');
         $user = $request->challengedUser();
 

@@ -126,7 +126,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     // Two Factor Authentication...
     if (Features::enabled(Features::twoFactorAuthentication())) {
         if ($enableViews) {
-            Route::get(RoutePath::for('two-factor.login', '/two-factor-challenge'), [TwoFactorAuthenticatedSessionController::class, 'create'])
+            Route::get(RoutePath::for('two-factor.login', '/two-factor-challenge'), [TwoFactorAuthenticatedSessionController::class, 'challenge'])
                 ->middleware(['guest:'.config('fortify.guard')])
                 ->name('two-factor.login');
         }
