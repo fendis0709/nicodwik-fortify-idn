@@ -39,5 +39,20 @@ Check config `fortify.php`
   <br> Determines mail class that will be called
 
 - `two_factor_enabled`
-  <br> Determines Two Factor is enabled / disabled
-  
+  <br> Determines two factor is enabled / disabled
+
+## Note
+
+#### Route
+list route you can use
+```bash
+## 2FA register page
+two-factor.register (GET)
+two-factor.verify (GET)
+two-factor.resend-email (POST)
+two-factor.proceed (POST)
+
+## 2FA input page
+two-factor.login (GET)
+two-factor.challenge (POST)
+```
