@@ -162,7 +162,7 @@ return [
     | Views Paths
     |--------------------------------------------------------------------------
     |
-    | 
+    | Determines path of view that used in project
     | 
     | 
     |
@@ -182,7 +182,7 @@ return [
     | Messages
     |--------------------------------------------------------------------------
     |
-    | 
+    | Determines the message that used after an action is called (saved in session flash)
     | 
     | 
     |
@@ -213,7 +213,7 @@ return [
     | Validation
     |--------------------------------------------------------------------------
     |
-    | 
+    | Determines custom laravel validation on your own (form request)
     | 
     | 
     |
@@ -244,7 +244,7 @@ return [
     | Mail
     |--------------------------------------------------------------------------
     |
-    | 
+    | Determines mail class that will be called
     | 
     | 
     |
@@ -261,7 +261,7 @@ return [
     | Two Factor Enabled
     |--------------------------------------------------------------------------
     |
-    | 
+    | Determines Two Factor is enabled / disabled
     | 
     | 
     |
