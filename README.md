@@ -56,3 +56,23 @@ two-factor.proceed (POST)
 two-factor.login (GET)
 two-factor.challenge (POST)
 ```
+
+#### Published file
+if you run `php artisan fortify:install`, these files will be generated :
+
+```bash
+## Config
+config/fortify.php
+
+## Mail
+app/Mail/TwoFactorAuthenticationQRCode.php
+resources/views/email/twofactor-qrcode.blade.php
+
+## 2FA page
+resources/views/auth/two-factor/register.blade.php
+resources/views/auth/two-factor/challenge.blade.php
+resources/views/auth/two-factor/recovery-code.blade.php
+
+## Migrations
+database/migrations/2014_10_12_200000_add_two_factor_columns_to_users_table.php
+```
