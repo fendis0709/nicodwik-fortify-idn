@@ -23,18 +23,21 @@ Laravel Fortify is a frontend agnostic authentication backend for Laravel. Forti
 
 Documentation for Fortify can be found on the [Laravel website](https://laravel.com/docs/fortify).
 
-## Contributing
+## Things To Do
 
-Thank you for considering contributing to Fortify! You can read the contribution guide [here](.github/CONTRIBUTING.md).
+Check config `fortify.php`
+-  `view-paths`
+  <br> Determines path of view that used in project
+  
+- `messages`
+  <br> Determines the message that used after an action is called (saved in session flash)
 
-## Code of Conduct
+- `validation`
+  <br> Determines custom laravel validation on your own (form request)
+  
+- `mail`
+  <br> Determines mail class that will be called
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-Please review [our security policy](https://github.com/laravel/fortify/security/policy) on how to report security vulnerabilities.
-
-## License
-
-Laravel Fortify is open-sourced software licensed under the [MIT license](LICENSE.md).
+- `two_factor_enabled`
+  <br> Determines Two Factor is enabled / disabled
+  
