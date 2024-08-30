@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\View\ViewException;
 use Laravel\Fortify\Contracts\FailedTwoFactorLoginResponse;
 use Laravel\Fortify\Contracts\TwoFactorChallengeViewResponse;
 use Laravel\Fortify\Contracts\TwoFactorLoginResponse;
@@ -87,6 +88,10 @@ class TwoFactorAuthenticatedSessionController extends Controller
             throw new HttpResponseException(redirect()->route('login'));
         }
 
+        if (! config('fortify.view-paths.two-factor.register')) {
+            return new ViewException('[two-factor.register] view path has not been set, please set in fortify.view-paths.two-factor.register');
+        }
+
         return view(config('fortify.view-paths.two-factor.register'));
     }
 
@@ -112,7 +117,15 @@ class TwoFactorAuthenticatedSessionController extends Controller
         }
 
         if ($user->two_factor_challenge_type == $user::RECOVERYCODECHALLENGE) {
+            if (! config('fortify.view-paths.two-factor.recovery-code')) {
+                return new ViewException('[two-factor.recovery-code] view path has not been set, please set in fortify.view-paths.two-factor.recovery-code');
+            }
+
             return view(config('fortify.view-paths.two-factor.recovery-code'));
+        }
+
+        if (! config('fortify.view-paths.two-factor.challenge')) {
+            return new ViewException('[two-factor.challenge] view path has not been set, please set in fortify.view-paths.two-factor.challenge');
         }
 
         return view(config('fortify.view-paths.two-factor.challenge'));

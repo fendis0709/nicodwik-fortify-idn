@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Pipeline;
+use Illuminate\View\ViewException;
 use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
@@ -48,6 +49,10 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request): View
     {
         // return app(LoginViewResponse::class);
+
+        if (! config('fortify.view-paths.login')) {
+            return new ViewException('[login] view path has not been set, please set in fortify.view-paths.login');
+        }
         return view(config('fortify.view-paths.login'));
     }
 
