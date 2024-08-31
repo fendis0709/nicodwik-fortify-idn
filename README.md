@@ -75,4 +75,10 @@ resources/views/auth/two-factor/recovery-code.blade.php
 
 ## Migrations
 database/migrations/2014_10_12_200000_add_two_factor_columns_to_users_table.php
+
+## Listener (for last login feature)
+app/Listeners/SetLastLoginSession.php
+
+## Middleware (for last login feature)
+app/Http/Middleware/CheckLastLoginMiddleware.php
 ```

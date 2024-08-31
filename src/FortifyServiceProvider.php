@@ -148,6 +148,14 @@ class FortifyServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs/two-factor/recovery-code.blade.php' => resource_path('views/auth/two-factor/recovery-code.blade.php'),
             ], 'fortify-view');
 
+            $this->publishes([
+                __DIR__.'/../stubs/listeners/SetLastLoginSession.php' => app_path('Listeners/SetLastLoginSession.php'),
+            ], 'fortify-listener');
+
+            $this->publishes([
+                __DIR__.'/../stubs/middleware/CheckLastLoginMiddleware.php' => app_path('Http/Middleware/CheckLastLoginMiddleware.php'),
+            ], 'fortify-middleware');
+
             $method = method_exists($this, 'publishesMigrations') ? 'publishesMigrations' : 'publishes';
 
             $this->{$method}([
