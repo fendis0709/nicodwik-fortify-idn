@@ -21,7 +21,27 @@ Laravel Fortify is a frontend agnostic authentication backend for Laravel. Forti
 
 ## Official Documentation
 
-Documentation for Fortify can be found on the [Laravel website](https://laravel.com/docs/fortify).
+Documentation for Fortify can be found on the [Fortify Laravel website](https://laravel.com/docs/fortify).
+
+## Installation
+
+1. Install using command `composer require nicodwik/fortify`
+2. After successfull installation, run `php artisan fortify:install`
+3. Some files will be generated automatically
+4. Add this code in `config/app.php`, inside `providers` array
+```php
+'providers' => ServiceProvider::defaultProviders()->merge([
+  // Any other providers
+  App\Providers\FortifyServiceProvider::class, // Add this provider
+])->toArray();
+```
+5. Add this code below in `app/Http/Kernel.php`, inside `protected $middlewareAliases`
+```php
+protected $middlewareAliases = [
+  // Any other middleware aliases
+  'last_login' => \App\Http\Middleware\CheckLastLoginMiddleware::class,  // Add this middleware alias
+];
+```
 
 ## Things To Do
 
@@ -44,7 +64,8 @@ Check config `fortify.php`
 ## Note
 
 #### Route
-list route you can use
+
+List route you can use
 ```bash
 ## 2FA register page
 two-factor.register (GET)
@@ -58,7 +79,8 @@ two-factor.challenge (POST)
 ```
 
 #### Published file
-if you run `php artisan fortify:install`, these files will be generated :
+
+If you run `php artisan fortify:install`, these files will be generated :
 
 ```bash
 ## Config
